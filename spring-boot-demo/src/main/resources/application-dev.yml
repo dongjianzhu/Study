@@ -1,0 +1,79 @@
+server:
+  port: 8081
+spring:
+  redis:
+    database: 0
+    host: 118.190.69.246
+    password: midu_ahd
+    port: 6379
+  datasource:
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      #useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8
+      url: jdbc:mysql://118.190.69.246:3306/test?allowMultiQueries=true&useUnicode=true&useSSL=false&characterEncoding=utf-8&serverTimezone=GMT%2B8
+      username: pdream
+      password: pdream-group
+      max-active: 10
+      min-idle: 2
+      initial-size: 5
+      #配置获取连接等待超时的时间
+      max-wait: 60000
+      #配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      time-between-eviction-runs-millis: 60000
+      #配置一个连接在池中最小生存的时间，单位是毫秒
+      min-evictable-idle-time-millis: 300000
+      #测试连接
+      validation-query: SELECT 'x'
+      #申请连接的时候检测，建议配置为true，不影响性能，并且保证安全性
+      test-while-idle: true
+      #获取连接时执行检测，建议关闭，影响性能
+      test-on-borrow: false
+      #归还连接时执行检测，建议关闭，影响性能
+      test-on-return: false
+      #是否开启PSCache，PSCache对支持游标的数据库性能提升巨大，oracle建议开启，mysql下建议关闭
+      pool-prepared-statements: false
+      #开启poolPreparedStatements后生效
+      max-pool-prepared-statement-per-connection-size: 20
+      #配置扩展插件，常用的插件有=>stat:监控统计  log4j:日志  wall:防御sql注入
+      filters: stat,wall,stat,slf4j,default
+      # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+      connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+      web-stat-filter:
+        enabled: true
+        url-pattern: /*
+        exclusions: "*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*"
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        reset-enable: true
+        login-username: admin
+        login-password: 123456
+      filter:
+        slf4j:
+          enabled: true
+          statement-create-after-log-enabled: false
+          statement-log-enabled: false
+          statement-executable-sql-log-enable: true
+          statement-log-error-enabled: true
+          result-set-log-enabled: false
+        stat:
+          log-slow-sql: true
+  messages:
+    encoding: utf-8
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+  http:
+    encoding:
+      charset: UTF-8
+  thymeleaf:
+    cache: false
+  activemq:
+    broker-url: tcp://114.67.231.108:61616
+    user: admin
+    password: pdream_group
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      id-type: input
