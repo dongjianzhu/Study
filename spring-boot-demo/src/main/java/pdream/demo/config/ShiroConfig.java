@@ -71,6 +71,11 @@ public class ShiroConfig {
         return shiroFilterFactoryBean;
     }
 
+    /**
+     * Enabling Shiro Annotations
+     * @param securityManager
+     * @return
+     */
     @Bean
     public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
         AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
