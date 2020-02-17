@@ -28,6 +28,7 @@ public class ShiroConfig {
     @Bean
     public ShiroFilterChainDefinition shiroFilterChainDefinition() {
         DefaultShiroFilterChainDefinition chainDefinition = new DefaultShiroFilterChainDefinition();
+        chainDefinition.addPathDefinition("/**", "anno");
         // logged in users with the 'admin' role
         chainDefinition.addPathDefinition("/admin/**", "authc, roles[admin]");
         // logged in users with the 'document:read' permission
