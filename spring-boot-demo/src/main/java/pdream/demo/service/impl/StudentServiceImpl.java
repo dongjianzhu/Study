@@ -23,7 +23,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     public boolean update(Integer id, String mobile) {
         Student student = new Student().setMobile(mobile).setId(id);
         boolean b = updateById(student);
-        int i = 1 / 0;
+//        int i = 1 / 0;
         return b;
     }
 }
