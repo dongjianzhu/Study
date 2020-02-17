@@ -1,19 +1,17 @@
 package pdream.demo.config;
 
-import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
-import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.cache.CacheManager;
+import org.apache.shiro.cache.MemoryConstrainedCacheManager;
+import org.apache.shiro.crypto.hash.Sha256Hash;
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.mgt.SessionsSecurityManager;
 import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
 import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
-import org.apache.shiro.mgt.SecurityManager;
-import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import pdream.demo.shiro.LoginRealm;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * shiro 相关
@@ -24,6 +22,9 @@ import java.util.Map;
 @Configuration
 public class ShiroConfig {
 
+    /**
+     * 配置url过滤器
+     */
     @Bean
     public ShiroFilterChainDefinition shiroFilterChainDefinition() {
         DefaultShiroFilterChainDefinition chainDefinition = new DefaultShiroFilterChainDefinition();
@@ -36,51 +37,41 @@ public class ShiroConfig {
         return chainDefinition;
     }
 
+    /**
+     * 设置用于匹配密码的CredentialsMatcher
+     */
     @Bean
-    @ConditionalOnMissingBean
-    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
-        DefaultAdvisorAutoProxyCreator defaultAAP = new DefaultAdvisorAutoProxyCreator();
-        defaultAAP.setProxyTargetClass(true);
-        return defaultAAP;
+    public HashedCredentialsMatcher credentialsMatcher() {
+        HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher();
+        // 散列算法，这里使用更安全的sha256算法
+        credentialsMatcher.setHashAlgorithmName(Sha256Hash.ALGORITHM_NAME);
+        // 数据库存储的密码字段使用HEX还是BASE64方式加密
+        credentialsMatcher.setStoredCredentialsHexEncoded(false);
+        // 散列迭代次数
+        credentialsMatcher.setHashIterations(1024);
+        return credentialsMatcher;
     }
 
     @Bean
-    public LoginRealm loginRealm() {
+    public LoginRealm loginRealm(HashedCredentialsMatcher matcher) {
         LoginRealm loginRealm = new LoginRealm();
-        return loginRealm;
+        loginRealm.setCredentialsMatcher(matcher);
+        return new LoginRealm();
     }
 
+    /**
+     * 配置security并设置userReaml，避免xxxx required a bean named 'authorizer' that could not be found.的报错
+     */
     @Bean
-    public SecurityManager securityManager(LoginRealm loginRealm) {
+    public SessionsSecurityManager securityManager(LoginRealm loginRealm, CacheManager cacheManager) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(loginRealm);
+        securityManager.setCacheManager(cacheManager);
         return securityManager;
     }
 
     @Bean
-    public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
-        ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
-        shiroFilterFactoryBean.setSecurityManager(securityManager);
-        Map<String, String> map = new HashMap<>();
-        map.put("/logout", "logout");
-        map.put("/**", "authc");
-        shiroFilterFactoryBean.setLoginUrl("/login");
-        shiroFilterFactoryBean.setSuccessUrl("/index");
-        shiroFilterFactoryBean.setUnauthorizedUrl("/error");
-        shiroFilterFactoryBean.setFilterChainDefinitionMap(map);
-        return shiroFilterFactoryBean;
+    protected CacheManager cacheManager() {
+        return new MemoryConstrainedCacheManager();
     }
-
-    /**
-     * Enabling Shiro Annotations
-     * @param securityManager
-     * @return
-     */
-    @Bean
-    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
-        AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
-        authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
-        return authorizationAttributeSourceAdvisor;
-    }
-
 }
