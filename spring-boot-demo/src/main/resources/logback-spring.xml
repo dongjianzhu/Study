@@ -174,7 +174,7 @@
     <!--开发环境:打印控制台-->
     <springProfile name="dev">
         <!-- 可以打印sql语句 -->
-        <logger name="pdream.demo.mapper" level="debug" addtivity="false"/>
+        <!--<logger name="pdream.demo.mapper" level="debug" addtivity="false"/>-->
         <root level="INFO">
             <!--  让日志在控制台输出 System.out 和 e.printStack() 默认就是标准输出（控制台） -->
             <appender-ref ref="CONSOLE"/>
