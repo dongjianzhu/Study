@@ -36,11 +36,5 @@ spring:
     broker-url: tcp://114.67.231.108:61616
     user: admin
     password: pdream_group
-mybatis-plus:
-  global-config:
-    db-config:
-      logic-delete-value: 1
-      logic-not-delete-value: 0
-      id-type: input
 shiro:
   loginUrl: /
