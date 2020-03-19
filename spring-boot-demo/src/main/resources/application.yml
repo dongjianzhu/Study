@@ -1,9 +1,31 @@
 spring:
   profiles:
     active: dev
+  messages:
+    encoding: utf-8
+  http:
+    encoding:
+      charset: UTF-8
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+  datasource:
+    hikari:
+      minimum-idle: 2
+      #      连接池最大连接数，默认是10
+      maximum-pool-size: 7
+      # 空闲连接存活最大时间，默认600000（10分钟）
+      idle-timeout: 180000
+      #       此属性控制池中连接的最长生命周期，值0表示无限生命周期，默认1800000即30分钟
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: select 1
+      # 此属性控制从池返回的连接的默认自动提交行为,默认值：true
+      auto-commit: true
 mybatis-plus:
   global-config:
     db-config:
       logic-delete-value: 1
       logic-not-delete-value: 0
       id-type: input
+shiro:
+  loginUrl: /
