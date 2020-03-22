@@ -49,7 +49,7 @@ public class StudentController {
         log.info("info log......");
         log.error("error log...");
         try {
-            Thread.sleep(3000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
