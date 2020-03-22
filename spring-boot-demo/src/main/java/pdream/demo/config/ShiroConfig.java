@@ -4,11 +4,14 @@ import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.crypto.hash.Sha256Hash;
-import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.mgt.SessionsSecurityManager;
+import org.apache.shiro.session.mgt.SessionManager;
+import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
 import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.servlet.SimpleCookie;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import pdream.demo.shiro.LoginRealm;
@@ -64,15 +67,51 @@ public class ShiroConfig {
      * 配置security并设置userReaml，避免xxxx required a bean named 'authorizer' that could not be found.的报错
      */
     @Bean
-    public SessionsSecurityManager securityManager(LoginRealm loginRealm, CacheManager cacheManager) {
+    public SessionsSecurityManager securityManager(LoginRealm loginRealm, CacheManager cacheManager, SessionManager sessionManager) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(loginRealm);
         securityManager.setCacheManager(cacheManager);
+        securityManager.setSessionManager(sessionManager);
         return securityManager;
     }
 
+    /**
+     * 配置sessionManager
+     */
     @Bean
-    protected CacheManager cacheManager() {
+    public SessionManager sessionManager(SessionDAO sessionDao) {
+        DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
+        sessionManager.setSessionDAO(sessionDao);
+        SimpleCookie cookie = new SimpleCookie("pd_isv_u");
+        cookie.setHttpOnly(true);
+        sessionManager.setSessionIdCookie(cookie);
+        return sessionManager;
+    }
+
+    /**
+     * 配置SessionDAO
+     */
+//    @Bean
+//    public SessionDAO sessionDao(RedisManager redisManager) {
+//        RedisSessionDAO redisSessionDAO = new RedisSessionDAO();
+//        redisSessionDAO.setRedisManager(redisManager);
+//        return redisSessionDAO;
+//    }
+   /* @Bean
+    public RedisManager redisManager() {
+        RedisManager redisManager = new RedisManager();
+        return redisManager;
+    }*/
+    /*@Bean
+    public CacheManager cacheManager(RedisManager redisManager) {
+        RedisCacheManager cacheManager = new RedisCacheManager();
+        cacheManager.setRedisManager(redisManager);
+        cacheManager.setPrincipalIdFieldName("mobile");
+        return cacheManager;
+    }*/
+    @Bean
+    public CacheManager cacheManager() {
         return new MemoryConstrainedCacheManager();
     }
+
 }
