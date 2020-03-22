@@ -3,7 +3,11 @@ package pdream.demo.aspect;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
+import pdream.demo.annotation.RunTime;
+
+import java.lang.reflect.Method;
 
 /**
  * 运行时间的切面
@@ -21,6 +25,11 @@ public class RunTimeAspect {
      */
     @Pointcut("execution(public * pdream.demo.controller.StudentController.*(..)))")
     public void pointCut() {
+
+    }
+
+    @Pointcut("@annotation(pdream.demo.annotation.RunTime)")
+    public void runTimePointCut() {
 
     }
 
@@ -44,8 +53,12 @@ public class RunTimeAspect {
     /**
      * 在连接点执行之后执行的通知（返回通知）
      */
-    @AfterReturning("pointCut()")
-    public void afterReturning() {
+    @AfterReturning("runTimePointCut()")
+    public void afterReturning(JoinPoint joinPoint) {
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        Method method = signature.getMethod();
+        RunTime runTime = method.getAnnotation(RunTime.class);
+        System.out.println("注解式拦截 " + runTime.name());
         System.out.println("after returning ....");
     }
 
@@ -59,6 +72,7 @@ public class RunTimeAspect {
 
     @Around("pointCut()")
     public Object around(ProceedingJoinPoint point) throws Throwable {
+        System.out.println("around ...");
         //开始时间
         long start = System.currentTimeMillis();
         //执行方法

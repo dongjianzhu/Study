@@ -6,6 +6,10 @@ spring:
     host: 118.190.69.246
     password: midu_ahd
     port: 6379
+    # 配置了这个，才会用到池
+    lettuce:
+      pool:
+        max-active: 8
   datasource:
     username: pdream
     password: pdream-group

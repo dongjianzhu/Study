@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import pdream.demo.annotation.RunTime;
 import pdream.demo.entity.Student;
 import pdream.demo.service.StudentService;
 
-import javax.sql.DataSource;
 import javax.validation.constraints.Max;
 
 /**
@@ -43,12 +43,17 @@ public class StudentController {
      */
     @RequestMapping("/get/{id:\\d+}")
     @ResponseBody
+    @RunTime(name = "name")
     public Student get(@PathVariable("id") @Max(value = 903, message = "{student.id.Max.message}") Integer id) {
         log.debug("debug log......");
         log.info("info log......");
         log.error("error log...");
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return service.getById(id);
-
     }
 
     @RequestMapping("/save")

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import pdream.common.ResponseResult;
+import pdream.demo.entity.ResponseResult;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
