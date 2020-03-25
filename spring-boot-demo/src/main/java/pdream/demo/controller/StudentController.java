@@ -53,7 +53,7 @@ public class StudentController {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return service.getById(id);
+        return service.get(id);
     }
 
     @RequestMapping("/save")

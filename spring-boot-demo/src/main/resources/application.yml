@@ -6,6 +6,7 @@ spring:
   http:
     encoding:
       charset: UTF-8
+      force: true
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
 mybatis-plus:
@@ -16,3 +17,9 @@ mybatis-plus:
       id-type: input
 shiro:
   loginUrl: /
+
+server:
+  ssl:
+    key-store-password: 123456
+    key-alias: tomcathttps
+    key-store: javaboy.p12

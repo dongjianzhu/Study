@@ -1,7 +1,7 @@
 package pdream.demo.service;
 
-import pdream.demo.entity.Student;
 import com.baomidou.mybatisplus.extension.service.IService;
+import pdream.demo.entity.Student;
 
 /**
  * <p>
@@ -14,5 +14,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface StudentService extends IService<Student> {
 
     boolean update(Integer id, String mobile);
+
+    Student get(Integer id);
 
 }

@@ -67,10 +67,10 @@ public class ShiroConfig {
      * 配置security并设置userReaml，避免xxxx required a bean named 'authorizer' that could not be found.的报错
      */
     @Bean
-    public SessionsSecurityManager securityManager(LoginRealm loginRealm, CacheManager cacheManager, SessionManager sessionManager) {
+    public SessionsSecurityManager securityManager(LoginRealm loginRealm, CacheManager shiroCacheManager, SessionManager sessionManager) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(loginRealm);
-        securityManager.setCacheManager(cacheManager);
+        securityManager.setCacheManager(shiroCacheManager);
         securityManager.setSessionManager(sessionManager);
         return securityManager;
     }
@@ -110,7 +110,7 @@ public class ShiroConfig {
         return cacheManager;
     }*/
     @Bean
-    public CacheManager cacheManager() {
+    public CacheManager shiroCacheManager() {
         return new MemoryConstrainedCacheManager();
     }
 
